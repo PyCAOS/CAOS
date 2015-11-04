@@ -1,3 +1,5 @@
 coveralls
 coverage
 nose
+six
+flake8
