@@ -1,5 +1,8 @@
 # CAOS - Computer Assisted Organic Synthesis (in Python!)
 
+[![Build status](https://travis-ci.org/PyCAOS/CAOS.svg)](https://travis-ci.org/PyCAOS/CAOS)
+[![Coverage Status](https://coveralls.io/repos/PyCAOS/CAOS/badge.svg?branch=master&service=github)](https://coveralls.io/github/PyCAOS/CAOS?branch=master)
+
 CAOS is a useful tool for many organic chemists, but is often a hard
 one to use in practice.  This library will seek to provide an easy 
 method of predicting reactions.
