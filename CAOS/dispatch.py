@@ -39,6 +39,10 @@ class ReactionDispatcher(object):
     REACTION_FAILURE_MESSAGE = ("Couldn't react reactants {}"
                                 " in conditions {}.")
     REGISTERED_MECHANISM_MESSAGE = "Added mechanism {} with requirements {}."
+    REQUIREMENT_NOT_MET_MESSAGE = ("Requirement {} for mechanism {} not met"
+                                   " by reactants {} in conditions {}")
+    REQUIREMENT_PASSED_MESSAGE = "Passed requirement {} for mechanism {}"
+    ADDED_POSSIBLE_MECHANISM = "Added potential mechanism {}"
 
     _function = None
     _namespace = None
@@ -176,12 +180,39 @@ class ReactionDispatcher(object):
             A list of molecules to be reacted
         conditions: mapping[String -> Object]
             Dictionary of the conditions in this molecule.
+
+        Returns
+        =======
+        mechanisms: list[function]
+            A list of mechanisms to try.
+
+        Notes
+        =====
+        Currently this list is in no particular order - this will change
+        and should not be relied on.
         """
 
-        # Todo: implement this
-        return [item['function']
-                for item in six.itervalues(
-                    ReactionDispatcher.mechanism_namespace)]
+        mechanisms = []
+
+        for mech_name, mech_info in six.iteritems(cls.mechanism_namespace):
+            mechanism = mech_info['function']
+            requirements = mech_info['requirements']
+
+            for req_name, req_function in six.iteritems(requirements):
+                if not req_function(reactants, conditions):
+                    logger.log(cls.REQUIREMENT_NOT_MET_MESSAGE.format(
+                        req_name, mech_name, reactants, conditions
+                    ))
+                    break
+                else:
+                    logger.log(cls.REQUIREMENT_PASSED_MESSAGE.format(
+                        req_name, mech_name
+                    ))
+            else:
+                logger.log(cls.ADDED_POSSIBLE_MECHANISM.format(mech_name))
+                mechanisms.append(mechanism)
+
+        return mechanisms
 
     @classmethod
     def _react(cls, reactants, conditions):
@@ -218,7 +249,33 @@ class ReactionDispatcher(object):
         logger.log(message)
         raise FailedReactionError(message)
 
+    @classmethod
+    def is_registered(cls, reaction):
+        """Check if a reaction has been registered.
+
+        Parameters
+        ==========
+        reaction: string, callable
+            The reaction to be checked.
+
+        Returns
+        =======
+        bool
+            Whether or not the reaction has been registered.
+        """
+
+        if callable(reaction):
+            for name, info in six.iteritems(cls.mechanism_namespace):
+                if reaction is info['function']:
+                    return True
+            else:
+                return False
+        else:
+            return reaction in cls.mechanism_namespace
+
+
 # Provide friendlier way to call things
 react = ReactionDispatcher._react
 register_reaction_mechanism = ReactionDispatcher
 _clear = ReactionDispatcher._ReactionDispatcher__clear
+reaction_is_registered = ReactionDispatcher.is_registered

@@ -1,13 +1,13 @@
 """Errors that occur while dispatching the mechanism or type."""
 
 
+from __future__ import print_function, division, unicode_literals
+
+
 class DispatchException(Exception):
     """Generic error raised when some problem occurs during dispatch."""
 
-    def __init__(self, message, *args, **kwargs):
-        """Create the error."""
-
-        super(DispatchException, self).__init__(message, *args, **kwargs)
+    pass
 
 
 class ExistingReactionError(DispatchException):

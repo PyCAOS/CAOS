@@ -1,4 +1,6 @@
-from CAOS.dispatch import register_reaction_mechanism
+from __future__ import print_function, division, unicode_literals
+
+from CAOS.dispatch import register_reaction_mechanism, reaction_is_registered
 from CAOS.util import raises
 from CAOS.exceptions.dispatch_errors import InvalidReactionError, \
     ExistingReactionError
@@ -9,7 +11,8 @@ def test_register_simple_reaction():
     def reaction1(reactants, conditions):
         return 42
 
-    assert 'reaction 1' in register_reaction_mechanism.mechanism_namespace
+    assert reaction_is_registered('reaction 1')
+    assert reaction_is_registered(reaction1)
 
 
 def test_register_simple_reaction_with_requirements():
@@ -20,7 +23,8 @@ def test_register_simple_reaction_with_requirements():
     def reaction2(reactants, conditions):
         return 36
 
-    assert 'reaction 2' in register_reaction_mechanism.mechanism_namespace
+    assert reaction_is_registered('reaction 2')
+    assert reaction_is_registered(reaction2)
 
 
 def test_register_simple_reaction_with_invalid_requirements():
@@ -28,8 +32,12 @@ def test_register_simple_reaction_with_invalid_requirements():
     function = register_reaction_mechanism
     args = ['reaction 3', {'voodoo': voodoo}]
 
+    def reaction3(reactants, conditions):
+        return 11
+
     assert raises(InvalidReactionError, function, args)
-    assert 'reaction 3' not in register_reaction_mechanism.mechanism_namespace
+    assert not reaction_is_registered('reaction 3')
+    assert not reaction_is_registered(reaction3)
 
 
 def test_register_existing_reaction():
@@ -46,3 +54,6 @@ def test_not_modified_by_decorator():
     decorated = register_reaction_mechanism('reaction 4', {})(myfunction)
     assert myfunction is decorated
     assert myfunction() == decorated()
+
+    assert reaction_is_registered('reaction 4')
+    assert reaction_is_registered(myfunction)
