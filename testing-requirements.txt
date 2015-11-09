@@ -1,0 +1,7 @@
+coveralls
+coverage
+nose
+flake8
+flake8-todo
+pep8-naming
+pep257
