@@ -19,15 +19,18 @@ def raises(exception_types, function, args=None, kwargs=None):
     Examples
     ========
     It should return `False` when given a valid value
+
     >>> raises(ValueError, int, ["3"])
     False
 
     It should return `True` when given an invalid value that results in
     the expected error
+
     >>> raises(ValueError, int, ["hello"])
     True
 
     It should raise an error if it gets an unexpected error
+
     >>> raises(UnboundLocalError, int, ["hello"])
     Traceback (most recent call last):
         ...
