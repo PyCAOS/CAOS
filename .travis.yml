@@ -1,0 +1,32 @@
+sudo: false
+
+language: python
+
+matrix:
+  include:
+    - python: "2.6"
+    - python: "2.7"
+    - python: "3.3"
+    - python: "3.4"
+    - python: "3.5"
+  allow_failures:
+    - python: "2.6"
+    - python: "3.3"
+    - python: "3.4"
+    - python: "3.5"
+  fast_finish: true
+
+install:
+  - pip install -r requirements.txt
+  - pip install -r testing-requirements.txt
+
+script:
+  - echo "Checking correctness:"
+  - nosetests
+  - echo "Checking PEP 8 compliance:"
+  - flake8 .
+  - echo "Checking PEP 257 compliance (docstrings):"
+  - pep257 .
+
+after_success:
+  - coveralls
