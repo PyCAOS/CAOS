@@ -147,28 +147,15 @@ class ReactionDispatcher(object):
 
         Notes
         =====
-        Callables that are decorated with this will not behave as
-        expected if called directly - they will always perform dispatch.
-        If it is absolutely necessary to be able to call to original
-        function you can do something like this:
-
-        >>> def my_function(reactants, conditions):
-        ...     pass
-        >>> my_function_orig = my_function
-        >>> my_function = ReactionDispatcher("", {})(my_function)
-
-        It is intended that functions decorated with this dispatcher
-        aren't actually called directly because they should be used
-        if necessary by the `react` function.
+        Callables that are decorated with this will not have any
+        difference in behavior than if they were not decorated.  In
+        order to get dispatching behavior, the `react` function must
+        be used instead.
         """
 
         self.function = mechanism_function
 
-        @six.wraps(mechanism_function)
-        def _(reactants, conditions):
-            return ReactionDispatcher._react(reactants, conditions)
-
-        return _
+        return mechanism_function
 
     @classmethod
     def __clear(cls):
@@ -231,6 +218,7 @@ class ReactionDispatcher(object):
         logger.log(message)
         raise FailedReactionError(message)
 
-# Don't require users to call it this way
+# Provide friendlier way to call things
 react = ReactionDispatcher._react
 register_reaction_mechanism = ReactionDispatcher
+_clear = ReactionDispatcher._ReactionDispatcher__clear

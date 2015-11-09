@@ -22,6 +22,7 @@ def test_register_simple_reaction_with_requirements():
 
     assert 'reaction 2' in register_reaction_mechanism.mechanism_namespace
 
+
 def test_register_simple_reaction_with_invalid_requirements():
     voodoo = 17
     function = register_reaction_mechanism
@@ -30,8 +31,18 @@ def test_register_simple_reaction_with_invalid_requirements():
     assert raises(InvalidReactionError, function, args)
     assert 'reaction 3' not in register_reaction_mechanism.mechanism_namespace
 
+
 def test_register_existing_reaction():
     function = register_reaction_mechanism
     args = ['reaction 2', {}]
 
     assert raises(ExistingReactionError, function, args)
+
+
+def test_not_modified_by_decorator():
+    def myfunction(*args):
+        return 42
+
+    decorated = register_reaction_mechanism('reaction 4', {})(myfunction)
+    assert myfunction is decorated
+    assert myfunction() == decorated()
