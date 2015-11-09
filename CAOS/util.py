@@ -30,7 +30,7 @@ def raises(exception_types, function, args=None, kwargs=None):
     True
 
     It should raise an error if it gets an unexpected error
-    
+
     >>> raises(UnboundLocalError, int, ["hello"])
     Traceback (most recent call last):
         ...

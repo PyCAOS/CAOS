@@ -2,9 +2,9 @@
 
 Provides two decorators that are aliases for classes:
 
-    decorator alias -> ClassName  
-    register_reaction_mechanism -> ReactionDispatcher  
-    register_molecule_type -> MoleculeTypeDispatcher  
+    decorator alias -> ClassName
+    register_reaction_mechanism -> ReactionDispatcher
+    register_molecule_type -> MoleculeTypeDispatcher
 
 This allows the reaction system to determine which type of reaction and
 what representation of molecules should be used, all occuring
@@ -62,7 +62,7 @@ class ReactionDispatcher(object):
         Raises
         ------
         ExistingReactionError
-            The name must be unique - if an existing mechanism shares 
+            The name must be unique - if an existing mechanism shares
             this name it will cause an error.
         """
 
@@ -113,7 +113,7 @@ class ReactionDispatcher(object):
         -------
         callable
             The function that has been registered for this reaction.
-            
+
         Notes
         -----
         Should not be called directly - let the `react` function handle
