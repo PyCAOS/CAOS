@@ -1,1 +1,1 @@
-"""Start"""
+"""CAOS module."""

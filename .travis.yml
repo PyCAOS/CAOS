@@ -1,3 +1,5 @@
+sudo: false
+
 language: python
 
 matrix:
@@ -14,14 +16,17 @@ matrix:
     - python: "3.5"
   fast_finish: true
 
-before_install:
-  - sudo apt-get update -qq
-
 install:
-  - pip install -q -r requirements.txt
+  - pip install -r requirements.txt
+  - pip install -r testing-requirements.txt
 
 script:
-  - nosetests --with-doctest --with-coverage --cover-package=CAOS
+  - echo "Checking correctness:"
+  - nosetests
+  - echo "Checking PEP 8 compliance:"
+  - flake8 .
+  - echo "Checking PEP 257 compliance (docstrings):"
+  - pep257 .
 
 after_success:
   - coveralls
