@@ -21,12 +21,9 @@ install:
   - pip install -r testing-requirements.txt
 
 script:
-  - echo "Checking correctness:"
-  - nosetests
-  - echo "Checking PEP 8 compliance:"
-  - flake8 .
-  - echo "Checking PEP 257 compliance (docstrings):"
-  - pep257 .
-
+  - echo "Checking correctness: " && nosetests
+  - echo "Checking PEP 8 compliance: " && flake8 .
+  - echo "Checking PEP 257 compliance (docstrings): " && pep257 .
+  - echo "Checking that the docs build: " && cd docs && sphinx-build -E docs docs/_build
 after_success:
   - coveralls
