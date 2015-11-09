@@ -114,9 +114,25 @@ class TestPerformReactions(object):
         def b(r, c):
             return "b"
 
-        # This behavior may change if/when ranking of potential mechanisms
-        # or of viability of products is implemented
-        assert react(None, None) == "a"
+        # The order is not guaranteed, but it should equal one of them.
+        # This will be fixed once ordering is worked out.
+        assert react(None, None) in ("a", "b")
+
+    def test_multiple_options_some_invalid(self):
+        @register_reaction_mechanism('a', {})
+        def a(r, c):
+            return "a"
+
+        @register_reaction_mechanism('b', {})
+        def b(r, c):
+            return "b"
+
+        @register_reaction_mechanism('c', {'r2': self.requirement2})
+        def c(r, c_):
+            return "c"
+            
+        assert react(None, None) in ("a", "b")
+
 
     def test_no_options(self):
         function = react
