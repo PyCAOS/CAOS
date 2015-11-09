@@ -109,6 +109,8 @@ class ReactionDispatcher(object):
 
         for req_name, req_function in six.iteritems(req):
             if not six.callable(req_function):
+                del ReactionDispatcher.mechanism_namespace[self.name]
+
                 message = "Requirement {} is not a function.".format(req_name)
                 logger.error(message)
                 raise InvalidReactionError(message)
@@ -169,6 +171,15 @@ class ReactionDispatcher(object):
         return _
 
     @classmethod
+    def __clear(cls):
+        """Clear out the namespace.
+
+        This really only exists for testing purposes.
+        """
+
+        cls.mechanism_namespace = {}
+
+    @classmethod
     def _generate_likely_reactions(cls, reactants, conditions):
         """Generate a list of potential reactions.
 
@@ -222,3 +233,4 @@ class ReactionDispatcher(object):
 
 # Don't require users to call it this way
 react = ReactionDispatcher._react
+register_reaction_mechanism = ReactionDispatcher
