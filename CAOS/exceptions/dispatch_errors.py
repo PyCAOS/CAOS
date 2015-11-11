@@ -1,6 +1,5 @@
 """Errors that occur while dispatching the mechanism or type."""
 
-
 from __future__ import print_function, division, unicode_literals
 
 
@@ -18,5 +17,17 @@ class ExistingReactionError(DispatchException):
 
 class InvalidReactionError(DispatchException):
     """The reaction being registered is invalid in some way."""
+
+    pass
+
+
+class InvalidMoleculeStructureError(DispatchException):
+    """An unknown type of molecule is required for the given reaction."""
+
+    pass
+
+
+class ExistingMoleculeTypeError(DispatchException):
+    """A molecule of this type has already been registered."""
 
     pass

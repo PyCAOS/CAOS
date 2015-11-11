@@ -74,6 +74,13 @@ molecular data structures in order to meet their own needs
 As these details become more firmly defined, this file will become more
 useful.
 
+Licensing
+~~~~~~~~~
+
+CAOS is licensed using the `MIT License <https://opensource.org/licenses/MIT>`_.
+
+.. include:: ../LICENSE
+
 .. |Build status| image:: https://travis-ci.org/PyCAOS/CAOS.svg
    :target: https://travis-ci.org/PyCAOS/CAOS
 .. |Coverage Status| image:: https://coveralls.io/repos/PyCAOS/CAOS/badge.svg?branch=master&service=github

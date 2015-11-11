@@ -1,11 +1,7 @@
 """Handles registration and dispatch of reactions and molecule types.
 
-Provides two decorators that are aliases for classes:
-
-    decorator alias -> ClassName
-    register_reaction_mechanism -> ReactionDispatcher
-    register_molecule_type -> MoleculeTypeDispatcher
-
+Provides two decorators that are used to register reactions and
+molecules, `register_reaction_mechanism` and `register_molecule_type`.
 This allows the reaction system to determine which type of reaction and
 what representation of molecules should be used, all occuring
 dynamically, at runtime.
@@ -27,7 +23,8 @@ from __future__ import print_function, division, unicode_literals
 import six
 
 from .exceptions.dispatch_errors import ExistingReactionError, \
-    InvalidReactionError
+    InvalidReactionError, InvalidMoleculeStructureError, \
+    ExistingMoleculeTypeError
 from .exceptions.reaction_errors import FailedReactionError
 from .chem_logging import logger
 
@@ -44,12 +41,13 @@ class ReactionDispatcher(object):
                                     " by reactants {} in conditions {}")
     _REQUIREMENT_PASSED_MESSAGE = "Passed requirement {} for mechanism {}"
     _ADDED_POSSIBLE_MECHANISM = "Added potential mechanism {}"
+    _UNKNOWN_STRUCTURE_MESSAGE = ("Unkown molecular structure {} required for "
+                                  "mechanism {}")
+    _EXISTING_MOLECULE_TYPE_ERROR = "Molecule type {} already registered."
 
     _mechanism_namespace = {}
-
-    _function = None
+    _structure_namespace = {}
     _namespace = None
-    _requirements = None
     _name = ""
 
     @property
@@ -95,7 +93,8 @@ class ReactionDispatcher(object):
         -------
         dict
             Contains the requirements that must be met to dispatch this
-            function, as well as the function itself.
+            function, the data structure needed, as well as the function
+            itself.
 
         Notes
         -----
@@ -122,9 +121,7 @@ class ReactionDispatcher(object):
         that.
         """
 
-        if self._function is None:
-            self._function = self.namespace['function']
-        return self._function
+        return self.namespace['function']
 
     @function.setter
     def function(self, func):
@@ -149,9 +146,7 @@ class ReactionDispatcher(object):
             raised.
         """
 
-        if self._requirements is None:
-            self._requirements = self.namespace['requirements']
-        return self._requirements
+        return self.namespace['requirements']
 
     @requirements.setter
     def requirements(self, req):
@@ -166,7 +161,42 @@ class ReactionDispatcher(object):
                 raise InvalidReactionError(message)
         self.namespace['requirements'] = req
 
-    def __init__(self, mechanism_name, requirements):
+    @property
+    def molecule_type(self):
+        """The representation of molecules this reaction requires.
+
+        Returns
+        -------
+        type
+            The class of the data structure that should be used.
+
+        Raises
+        ------
+        InvalidMoleculeStructureError
+            If the molecule doesn't meet the interface required for
+            dispatch then an error is raised.
+        """
+
+        return self.namespace['molecule_type']
+
+    @molecule_type.setter
+    def molecule_type(self, type_):
+        """Set the molecule type."""
+
+        if ReactionDispatcher._is_registered_molecule_type(type_):
+            if isinstance(type_, str):
+                self.namespace['molecule_type'] = \
+                    ReactionDispatcher._structure_namespace[type_]
+            else:
+                self.namespace['molecule_type'] = type_
+        else:
+            message = ReactionDispatcher._UNKNOWN_STRUCTURE_MESSAGE.format(
+                type_, self.name
+            )
+            logger.error(message)
+            raise InvalidMoleculeStructureError(message)
+
+    def __init__(self, mechanism_name, requirements, molecule_type='default'):
         """Register a new reaction mechanism.
 
         Parameters
@@ -176,10 +206,14 @@ class ReactionDispatcher(object):
         requirements: dict
             Dictionary of requirements that provided reactants and
             conditions must meet for this reaction to be considered.
+        molecule_type: Optional[string], Optional[type]
+            The name or type of data structure that should be used for
+            this type of reaction.
         """
 
         self.name = mechanism_name
         self.requirements = requirements
+        self.molecule_type = molecule_type
         logger.log(
             ReactionDispatcher._REGISTERED_MECHANISM_MESSAGE.format(
                 mechanism_name, list(six.iterkeys(requirements))
@@ -303,7 +337,7 @@ class ReactionDispatcher(object):
         raise FailedReactionError(message)
 
     @classmethod
-    def _is_registered(cls, reaction):
+    def _is_registered_reaction(cls, reaction):
         """Check if a reaction has been registered.
 
         Parameters
@@ -326,17 +360,85 @@ class ReactionDispatcher(object):
         else:
             return reaction in cls._mechanism_namespace
 
+    @classmethod
+    def _is_registered_molecule_type(cls, molecule_type):
+        """Check if a molecule type has been registered.
+
+        Parameters
+        ==========
+        molecule_type: string, type
+            The molecule type to be checked.
+
+        Returns
+        =======
+        bool
+            Whether or not the molecule type has been registered.
+        """
+
+        for name, type_ in six.iteritems(cls._structure_namespace):
+            if name == molecule_type or type_ is molecule_type:
+                return True
+        return False
+
+    @classmethod
+    def _register_molecule_type(cls, name, method_name='from_default'):
+        """Register a molecule.
+
+        Parameters
+        ==========
+        name : string
+            The name of the molecule type.
+        method_name : Optional[string]
+            The name of the `classmethod` that can be used to construct
+            an instance of the registered object from a default Molecule
+            object. If not provided it is assumed to be 'from_default'.
+
+        Returns
+        =======
+        register : function
+            The actual decorator that can be used to decorate the class.
+        """
+
+        def register(class_):
+            """Register a class representing a molecule.
+
+            Registers the class with the dispatch system.
+
+            Parameters
+            ==========
+            class_ : type
+                Class object for the representation.
+
+            Raises
+            ======
+            ExistingMoleculeTypeError
+                The molecule type should not have been previously
+                registered with the dispatch system.
+
+            Returns
+            =======
+            class_ : type
+                The same class object that was passed in, unaltered.
+            """
+
+            if name in cls._structure_namespace:
+                message = cls._EXISTING_MOLECULE_TYPE_ERROR.format(name)
+                logger.error(message)
+                raise ExistingMoleculeTypeError(message)
+
+            cls._structure_namespace[name] = {
+                'type': class_, 'method_name': method_name
+            }
+
+            return class_
+
+        return register
+
 
 # Provide friendlier way to call things
 react = ReactionDispatcher._react
 register_reaction_mechanism = ReactionDispatcher
 _clear = ReactionDispatcher._ReactionDispatcher__clear
-reaction_is_registered = ReactionDispatcher._is_registered
-
-
-class MoleculeDispatcher(object):
-    """Dispatches based on molecule type."""
-
-    pass
-
-register_molecule_type = MoleculeDispatcher
+reaction_is_registered = ReactionDispatcher._is_registered_reaction
+register_molecule_type = ReactionDispatcher._register_molecule_type
+molecule_type_is_registered = ReactionDispatcher._is_registered_molecule_type
