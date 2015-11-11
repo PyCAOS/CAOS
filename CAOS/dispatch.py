@@ -18,6 +18,8 @@ register_reaction_mechanism: function
     Registers a reaction mechanism with the dispatch system.
 reaction_is_registered: function
     Checks whether or not a reaction has been registered.
+register_molecule_type: function
+    Registers a molecule type (i.e. a class) with the dispatch system.
 """
 
 from __future__ import print_function, division, unicode_literals
@@ -330,3 +332,11 @@ react = ReactionDispatcher._react
 register_reaction_mechanism = ReactionDispatcher
 _clear = ReactionDispatcher._ReactionDispatcher__clear
 reaction_is_registered = ReactionDispatcher._is_registered
+
+
+class MoleculeDispatcher(object):
+    """Dispatches based on molecule type."""
+
+    pass
+
+register_molecule_type = MoleculeDispatcher

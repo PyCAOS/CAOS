@@ -32,6 +32,7 @@ Subpackages
 .. toctree::
 
     CAOS.exceptions
+    CAOS.structures
 
 Module contents
 ---------------
