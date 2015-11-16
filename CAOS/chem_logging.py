@@ -18,9 +18,4 @@ class DummyLogger(object):
             pass
         return _
 
-    def __setattr__(self, name, value):
-        """"Set" a value."""
-
-        pass
-
 logger = DummyLogger()

@@ -2,7 +2,10 @@
 
 from __future__ import print_function, division, unicode_literals
 
+import json
+
 import networkx as nx
+from networkx.algorithms.isomorphism import is_isomorphic
 import six
 
 from ..dispatch import register_molecule_type
@@ -12,6 +15,9 @@ from ..chem_logging import logger
 @register_molecule_type('default')
 class Molecule(nx.Graph):
     """Representation of a molecule as a graph."""
+
+    _ATOM_EXISTS = "ATOM {} exists in the molecule as ID {}"
+    _BOND_EXISTS = "BOND {} exists in the molecule as ID {}"
 
     @classmethod
     def from_default(cls, other):
@@ -193,3 +199,35 @@ class Molecule(nx.Graph):
                      if key != 'nodes')
             )
             self.bonds[id_] = bond
+
+    def _node_matcher(self, first, second):
+        """Check if two nodes are isomorphically equivalent.
+
+        Parameters
+        ----------
+        first, second : dict
+            Dictionaries of the contents of two nodes.
+
+        Returns
+        -------
+        bool
+            Whether or not two nodes are isographically equivalent, in
+            this case meaning that they have the same atomic symbol.
+        """
+
+        return first['symbol'] == second['symbol']
+
+    def __eq__(self, other):
+        return is_isomorphic(self, other, node_match=self._node_matcher)
+
+    def __ne__(self, other):
+        return not self == other
+
+    def __repr__(self):
+        return '\n'.join(
+            [
+                json.dumps(self.atoms),
+                json.dumps(self.bonds),
+                json.dumps(self.info)
+            ]
+        )
