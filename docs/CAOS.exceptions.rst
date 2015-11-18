@@ -1,6 +1,14 @@
 CAOS.exceptions package
 =======================
 
+Module contents
+---------------
+
+.. automodule:: CAOS.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -16,15 +24,6 @@ CAOS.exceptions.reaction_errors module
 --------------------------------------
 
 .. automodule:: CAOS.exceptions.reaction_errors
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: CAOS.exceptions
     :members:
     :undoc-members:
     :show-inheritance:

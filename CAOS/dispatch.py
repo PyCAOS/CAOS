@@ -1,14 +1,9 @@
 """Handles registration and dispatch of reactions and molecule types.
 
-Provides two decorators that are aliases for classes:
-
-    decorator alias -> ClassName
-    register_reaction_mechanism -> ReactionDispatcher
-    register_molecule_type -> MoleculeTypeDispatcher
-
-This allows the reaction system to determine which type of reaction and
-what representation of molecules should be used, all occuring
-dynamically, at runtime.
+Provides a decorator that is used to register reaction mechanisms,
+`register_reaction_mechanism`. This allows the reaction system to
+determine which type of reaction should be attempted, dynamically at
+runtime.
 
 Attributes
 ----------
@@ -20,14 +15,15 @@ reaction_is_registered: function
     Checks whether or not a reaction has been registered.
 """
 
-from __future__ import print_function, division, unicode_literals
+from __future__ import print_function, division, unicode_literals, \
+    absolute_import
 
 import six
 
 from .exceptions.dispatch_errors import ExistingReactionError, \
     InvalidReactionError
 from .exceptions.reaction_errors import FailedReactionError
-from .chem_logging import logger
+from . import logger
 
 
 class ReactionDispatcher(object):
@@ -42,12 +38,10 @@ class ReactionDispatcher(object):
                                     " by reactants {} in conditions {}")
     _REQUIREMENT_PASSED_MESSAGE = "Passed requirement {} for mechanism {}"
     _ADDED_POSSIBLE_MECHANISM = "Added potential mechanism {}"
+    _EXISTING_MECHANISM_ERROR = "A mechanism named {} already exists."
 
     _mechanism_namespace = {}
-
-    _function = None
     _namespace = None
-    _requirements = None
     _name = ""
 
     @property
@@ -76,7 +70,7 @@ class ReactionDispatcher(object):
         """
 
         if mechanism_name in ReactionDispatcher._mechanism_namespace:
-            message = "A mechanism named {} already exists.".format(
+            message = ReactionDispatcher._EXISTING_MECHANISM_ERROR.format(
                 mechanism_name
             )
             logger.error(message)
@@ -93,7 +87,8 @@ class ReactionDispatcher(object):
         -------
         dict
             Contains the requirements that must be met to dispatch this
-            function, as well as the function itself.
+            function, the data structure needed, as well as the function
+            itself.
 
         Notes
         -----
@@ -120,9 +115,7 @@ class ReactionDispatcher(object):
         that.
         """
 
-        if self._function is None:
-            self._function = self.namespace['function']
-        return self._function
+        return self.namespace['function']
 
     @function.setter
     def function(self, func):
@@ -147,9 +140,7 @@ class ReactionDispatcher(object):
             raised.
         """
 
-        if self._requirements is None:
-            self._requirements = self.namespace['requirements']
-        return self._requirements
+        return self.namespace['requirements']
 
     @requirements.setter
     def requirements(self, req):
@@ -209,17 +200,6 @@ class ReactionDispatcher(object):
         self.function = mechanism_function
 
         return mechanism_function
-
-    @classmethod
-    def __clear(cls):
-        """Clear out the namespace.
-
-        Notes
-        -----
-        This really only exists for testing purposes.
-        """
-
-        cls._mechanism_namespace = {}
 
     @classmethod
     def _generate_likely_reactions(cls, reactants, conditions):
@@ -287,21 +267,21 @@ class ReactionDispatcher(object):
         )
 
         for potential_reaction in potential_reactions:
-            product = potential_reaction(reactants, conditions)
+            products = potential_reaction(reactants, conditions)
             logger.log(
                 cls._REACTION_ATTEMPT_MESSAGE.format(
                     reactants, conditions, potential_reaction
                 )
             )
-            if product is not None:
-                return product
+            if products:
+                return products
 
         message = cls._REACTION_FAILURE_MESSAGE.format(reactants, conditions)
         logger.log(message)
         raise FailedReactionError(message)
 
     @classmethod
-    def _is_registered(cls, reaction):
+    def _is_registered_reaction(cls, reaction):
         """Check if a reaction has been registered.
 
         Parameters
@@ -328,5 +308,4 @@ class ReactionDispatcher(object):
 # Provide friendlier way to call things
 react = ReactionDispatcher._react
 register_reaction_mechanism = ReactionDispatcher
-_clear = ReactionDispatcher._ReactionDispatcher__clear
-reaction_is_registered = ReactionDispatcher._is_registered
+reaction_is_registered = ReactionDispatcher._is_registered_reaction
