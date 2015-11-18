@@ -6,5 +6,5 @@ from __future__ import print_function, division, unicode_literals, \
 
 from .chem_logging import logger
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 __author__ = "Dan Obermiller"
