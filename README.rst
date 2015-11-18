@@ -20,7 +20,7 @@ the point where an example would be helpful.
 
 Currently the registration of reaction mechanisms has been implemented,
 as well as performing reactions. No work on loading molecules,
-representing those molecules, or analying them has been completed.
+representing those molecules, or analyzing them has been completed.
 
 Todos:
 ~~~~~~
@@ -55,21 +55,14 @@ to eventually provide this sort of interface to users.
 
     products.show()
 
-I'd also like to allow users to register new reaction mechanisms and new
-molecular data structures in order to meet their own needs
+I'd also like to allow users to register new reaction mechanisms in order to
+meet their own needs
 
 .. code:: python
 
-    @register_reaction_mechanism(name, requirements, molecule_type)
-    def diels_alder_reaction(products, conditions=None):
+    @register_reaction_mechanism(name, requirements)
+    def diels_alder_reaction(reactants, conditions):
         ...
-        
-    @register_molecule_type()
-    class DielsAlderStructure(object):
-
-      @classmethod
-      def from_default(cls, molecule):
-          ...
 
 As these details become more firmly defined, this file will become more
 useful.
