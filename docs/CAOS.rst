@@ -1,6 +1,14 @@
 CAOS package
 ============
 
+Module contents
+---------------
+
+.. automodule:: CAOS
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -31,12 +39,5 @@ Subpackages
 
 .. toctree::
 
+    CAOS.structures
     CAOS.exceptions
-
-Module contents
----------------
-
-.. automodule:: CAOS
-    :members:
-    :undoc-members:
-    :show-inheritance:

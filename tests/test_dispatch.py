@@ -1,9 +1,16 @@
-from __future__ import print_function, division, unicode_literals
+from __future__ import print_function, division, unicode_literals, \
+    absolute_import
 
-from CAOS.dispatch import register_reaction_mechanism, reaction_is_registered
+from CAOS.dispatch import register_reaction_mechanism, reaction_is_registered, \
+    ReactionDispatcher, react
 from CAOS.util import raises
 from CAOS.exceptions.dispatch_errors import InvalidReactionError, \
     ExistingReactionError
+
+
+def teardown_module():
+    for key in map('reaction {}'.format, [1, 2, 4]):
+        del ReactionDispatcher._mechanism_namespace[key]
 
 
 def test_register_simple_reaction():
@@ -47,7 +54,7 @@ def test_register_existing_reaction():
     assert raises(ExistingReactionError, function, args)
 
 
-def test_not_modified_by_decorator():
+def test_mechanism_not_modified_by_decorator():
     def myfunction(*args):
         return 42
 
