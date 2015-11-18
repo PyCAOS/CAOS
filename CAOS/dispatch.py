@@ -15,7 +15,8 @@ reaction_is_registered: function
     Checks whether or not a reaction has been registered.
 """
 
-from __future__ import print_function, division, unicode_literals
+from __future__ import print_function, division, unicode_literals, \
+    absolute_import
 
 import six
 
