@@ -19,15 +19,3 @@ class InvalidReactionError(DispatchException):
     """The reaction being registered is invalid in some way."""
 
     pass
-
-
-class InvalidMoleculeStructureError(DispatchException):
-    """An unknown type of molecule is required for the given reaction."""
-
-    pass
-
-
-class ExistingMoleculeTypeError(DispatchException):
-    """A molecule of this type has already been registered."""
-
-    pass

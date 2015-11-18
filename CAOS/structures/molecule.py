@@ -8,11 +8,9 @@ import networkx as nx
 from networkx.algorithms.isomorphism import is_isomorphic
 import six
 
-from ..dispatch import register_molecule_type
-from ..chem_logging import logger
+from .. import logger
 
 
-@register_molecule_type('default')
 class Molecule(nx.Graph):
     """Representation of a molecule as a graph."""
 

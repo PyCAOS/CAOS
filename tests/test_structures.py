@@ -1,6 +1,7 @@
 from CAOS.structures.molecule import Molecule
 from CAOS.util import raises
 
+
 def test_from_default():
     a = Molecule(
         {'a1': 'H', 'a2': 'O'},
@@ -104,7 +105,7 @@ def test_inequality():
     assert a != b
 
 
-def test_stupid_string_test():
+def test_stupid_repr_test():
     a = Molecule(
         {'a1': 'H', 'a2': 'O'},
         {'b1': {'nodes': ('a1', 'a2')}}
