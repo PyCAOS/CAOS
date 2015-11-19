@@ -17,7 +17,12 @@ from .compatibility import StringIO
 
 import sys
 
-from enum import Enum
+try:
+    from enum import Enum
+except ImportError:
+    raise ImportError(
+        "You need to install the enum34 package for Python versions < 3.4"
+    )
 
 
 LEVEL_ENUM = Enum("LEVEL_ENUM", "DEBUG INFO WARN ERROR")
@@ -102,19 +107,28 @@ class Logger(object):
             self.log(message, self.out)
 
     def log(self, message):
-        """"""
+        """Logs a message."""
+
         pass
 
     def warn(self, message):
+        """Logs a warning."""
+
         pass
 
     def error(self, message):
+        """Write an error message."""
+
         pass
 
 
-class DefaultLogger(Logger): 
+class DefaultLogger(Logger):
+    """Default logger for non-verbose mode."""
+
     pass
 
 
-class VerboseLogger(Logger): 
+class VerboseLogger(Logger):
+    """Verbose mode logger."""
+
     pass

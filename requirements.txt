@@ -1,3 +1,2 @@
 six
 networkx
-enum34
