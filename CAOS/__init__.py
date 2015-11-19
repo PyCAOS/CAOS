@@ -6,7 +6,7 @@ from __future__ import print_function, division, unicode_literals, \
 
 import argparse
 
-from .chem_logging import get_logger
+from .logging import get_logger
 
 
 __version__ = "0.2.1"

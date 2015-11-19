@@ -107,12 +107,12 @@ class Logger(object):
             self.log(message, self.out)
 
     def log(self, message):
-        """Logs a message."""
+        """Log a message."""
 
         pass
 
     def warn(self, message):
-        """Logs a warning."""
+        """Write a warning."""
 
         pass
 
