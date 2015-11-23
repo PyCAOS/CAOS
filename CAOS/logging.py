@@ -1,12 +1,12 @@
 """Singleton logging for the language.
 
 When verbose mode is enabled, logged messages are written to stdout or
-stderr, depending on the type of message.  Otherwise messages are
-suppressed.
+stderr, depending on the type of message.  Otherwise non-error messages
+are suppressed.
 
 Attributes
 ----------
-LEVEL_ENUM : Enum
+LoggingLevelEnum : Enum
     Logging levels - available levels are DEBUG, INFO, WARN, and ERROR.
 """
 
@@ -18,14 +18,16 @@ from .compatibility import StringIO
 import sys
 
 try:
-    from enum import Enum
+    from enum import IntEnum
 except ImportError:
     raise ImportError(
         "You need to install the enum34 package for Python versions < 3.4"
     )
 
 
-LEVEL_ENUM = Enum("LEVEL_ENUM", "DEBUG INFO WARN ERROR")
+class LoggingLevelEnum(IntEnum):
+    DEBUG = 1
+    INFO = 2
 
 fake_out = StringIO()
 fake_err = StringIO()
@@ -33,14 +35,14 @@ fake_err = StringIO()
 logger = None
 
 
-def get_logger(verbose, level=LEVEL_ENUM.INFO):
+def get_logger(verbose, level=LoggingLevelEnum.INFO):
     """Get a singleton logger for the given level and verbosity.
 
     Parameters
     ----------
     verbose : bool
         Whether or not verbose mode is enabled.
-    level : Optional[LEVEL_ENUM]
+    level : Optional[LoggingLevelEnum]
         The logging  level to be used.  Defaults to INFO.
 
     Returns
@@ -65,7 +67,7 @@ def get_logger(verbose, level=LEVEL_ENUM.INFO):
 class Logger(object):
     """Base logging class."""
 
-    def __init__(self, out_stream, err_stream, level=LEVEL_ENUM.INFO):
+    def __init__(self, out_stream, err_stream, level=LoggingLevelEnum.INFO):
         """Create a logger object.
 
         Parameters
@@ -74,7 +76,7 @@ class Logger(object):
             Standard output stream for non-errors.
         err_stream : file-like
             Standard error stream for error messages.
-        level : Optional[LEVEL_ENUM]
+        level : Optional[LoggingLevelEnum]
             The logging level to be used.
         """
 
@@ -91,7 +93,7 @@ class Logger(object):
             The message to be written.
         """
 
-        if self.level is LEVEL_ENUM.DEBUG:
+        if self.level == LoggingLevelEnum.DEBUG:
             self.log(message, self.out)
 
     def info(self, message):
@@ -103,32 +105,81 @@ class Logger(object):
             The message to be written
         """
 
-        if self.level <= LEVEL_ENUM:
+        if self.level <= LoggingLevelEnum.INFO:
             self.log(message, self.out)
 
-    def log(self, message):
-        """Log a message."""
+    def log(self, message, stream=None):
+        """Log a message to a given stream.
 
-        pass
+        Parameters
+        ----------
+        message : str
+            The message to log.
+        stream : Optiona[file-like]
+            The stream to write to.
+        """
+
+        if not stream:
+            stream = self.out
+
+        stream.write(message)
 
     def warn(self, message):
-        """Write a warning."""
+        """Write a warning to the error stream.
 
-        pass
+        Parameters
+        ----------
+        message : str
+            The warning message.
+        """
+
+        self.log(message, self.err)
 
     def error(self, message):
-        """Write an error message."""
+        """Write an error message to the error stream.
 
-        pass
+        Parameters
+        ----------
+        message : str
+            The error message.
+        """
+
+        self.log(message, self.err)
 
 
 class DefaultLogger(Logger):
     """Default logger for non-verbose mode."""
 
-    pass
+    def __init__(self, out=fake_out, err=sys.stderr,
+                 level=LoggingLevelEnum.INFO):
+        """Creates a default logger.
+
+        Parameters
+        ----------
+        out, err : Optional[file-like]
+            Streams to write to. Defaults to a dummy output stream, and
+            `sys.stderr`, respectively.
+        level : Optional[LoggingLevelEnum]
+            Logging level to use.
+        """
+
+        super(DefaultLogger, self).__init__(out, err, level)
 
 
 class VerboseLogger(Logger):
     """Verbose mode logger."""
 
-    pass
+    def __init__(self, out=sys.stdout, err=sys.stderr,
+                 level=LoggingLevelEnum.DEBUG):
+        """Creates a verbose logger.
+
+        Parameters
+        ----------
+        out, err : Optional[file-like]
+            Streams to write to. Defaults to `sys.stdout` and
+            `sys.stderr`, respectively.
+        level : Optional[LoggingLevelEnum]
+            Logging level to use.
+        """
+
+        super(VerboseLogger, self).__init__(out, err, level)
