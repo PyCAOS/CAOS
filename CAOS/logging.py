@@ -26,6 +26,16 @@ except ImportError:
 
 
 class LoggingLevelEnum(IntEnum):
+    """Enum for different logging levels.
+
+    Attributes
+    ----------
+    DEBUG : int
+        Debug level.
+    INFO : int
+        Info level.
+    """
+
     DEBUG = 1
     INFO = 2
 
@@ -152,7 +162,7 @@ class DefaultLogger(Logger):
 
     def __init__(self, out=fake_out, err=sys.stderr,
                  level=LoggingLevelEnum.INFO):
-        """Creates a default logger.
+        """Create a default logger.
 
         Parameters
         ----------
@@ -171,7 +181,7 @@ class VerboseLogger(Logger):
 
     def __init__(self, out=sys.stdout, err=sys.stderr,
                  level=LoggingLevelEnum.DEBUG):
-        """Creates a verbose logger.
+        """Create a verbose logger.
 
         Parameters
         ----------
