@@ -27,16 +27,16 @@ class TestGeneratePotentialMechanisms(object):
     # Test some stupidly simple cases without any real requirements
     def test_find_options_all_valid(self):
 
-        @register_reaction_mechanism('a', {'requirement1': requirement1})
+        @register_reaction_mechanism([requirement1])
         def a(r, c):
             return ["Hello, world!"]
 
-        @register_reaction_mechanism('b', {'requirement2': requirement1})
+        @register_reaction_mechanism([requirement1])
         def b(r, c):
             return ["Hello, world!"]
 
-        @register_reaction_mechanism('c', {})
-        def c(r, c_):
+        @register_reaction_mechanism([])
+        def c(r, c):
             return ["Hello, world!"]
 
         potential_mechanisms = ReactionDispatcher._generate_likely_reactions(
@@ -46,16 +46,16 @@ class TestGeneratePotentialMechanisms(object):
 
     def test_find_options_some_valid(self):
 
-        @register_reaction_mechanism('a', {'requirement1': requirement1})
+        @register_reaction_mechanism([requirement1])
         def a(r, c):
             return ["Hello, world!"]
 
-        @register_reaction_mechanism('b', {'requirement2': requirement2})
+        @register_reaction_mechanism([requirement2])
         def b(r, c):
             return ["Hello, world!"]
 
-        @register_reaction_mechanism('c', {})
-        def c(r, c_):
+        @register_reaction_mechanism([])
+        def c(r, c):
             return ["Hello, world!"]
 
         potential_mechanisms = ReactionDispatcher._generate_likely_reactions(
@@ -67,16 +67,16 @@ class TestGeneratePotentialMechanisms(object):
 
     def test_find_options_none_valid(self):
 
-        @register_reaction_mechanism('a', {'requirement1': requirement2})
+        @register_reaction_mechanism([requirement2])
         def a(r, c):
             return ["Hello, world!"]
 
-        @register_reaction_mechanism('b', {'requirement2': requirement2})
+        @register_reaction_mechanism([requirement2])
         def b(r, c):
             return ["Hello, world!"]
 
-        @register_reaction_mechanism('c', {'requirement3': requirement2})
-        def c(r, c_):
+        @register_reaction_mechanism([requirement2])
+        def c(r, c):
             return ["Hello, world!"]
 
         potential_mechanisms = ReactionDispatcher._generate_likely_reactions(
@@ -94,18 +94,18 @@ class TestPerformReactions(object):
                 del ReactionDispatcher._mechanism_namespace[key]
 
     def test_single_option(self):
-        @register_reaction_mechanism('a', {})
+        @register_reaction_mechanism([])
         def a(r, c):
             return ["Hello, world!"]
 
         assert react(None, None) == ["Hello, world!"]
 
     def test_multiple_options(self):
-        @register_reaction_mechanism('a', {})
+        @register_reaction_mechanism([])
         def a(r, c):
             return ["a"]
 
-        @register_reaction_mechanism('b', {})
+        @register_reaction_mechanism([])
         def b(r, c):
             return ["b"]
 
@@ -114,15 +114,15 @@ class TestPerformReactions(object):
         assert react(None, None) in (["a"], ["b"])
 
     def test_multiple_options_some_invalid(self):
-        @register_reaction_mechanism('a', {})
+        @register_reaction_mechanism([])
         def a(r, c):
             return ["a"]
 
-        @register_reaction_mechanism('b', {})
+        @register_reaction_mechanism([])
         def b(r, c):
             return ["b"]
 
-        @register_reaction_mechanism('c', {'r2': requirement2})
+        @register_reaction_mechanism([])
         def c(r, c_):
             return ["c"]
             
