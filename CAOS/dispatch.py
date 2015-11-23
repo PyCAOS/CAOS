@@ -41,8 +41,9 @@ class ReactionDispatcher(object):
     _EXISTING_MECHANISM_ERROR = "A mechanism named {} already exists."
 
     _mechanism_namespace = {}
+    _test_namespace = {}
 
-    def __init__(self, requirements):
+    def __init__(self, requirements, __test=False):
         """Register a new reaction mechanism.
 
         Parameters
@@ -50,9 +51,13 @@ class ReactionDispatcher(object):
         requirements: collection
             List of requirements that provided reactants and conditions
             must meet for this reaction to be considered.
+        __test: bool
+            Whether or not the reaction being registered is a test
+            reaction and shouldn't be in the real namespace.
         """
 
         self.requirements = requirements
+        self.__test = __test
 
     def __call__(self, mechanism_function):
         """Register the function.
@@ -79,12 +84,15 @@ class ReactionDispatcher(object):
         """
 
         mechanism_function.logger = logger
-        ReactionDispatcher._register(mechanism_function, self.requirements)
+        ReactionDispatcher._register(
+            mechanism_function, self.requirements,
+            self._ReactionDispatcher__test
+        )
 
         return mechanism_function
 
     @classmethod
-    def _register(cls, function, requirements):
+    def _register(cls, function, requirements, __test):
         """Register a function with the dispatch system.
 
         Parameters
@@ -93,27 +101,47 @@ class ReactionDispatcher(object):
             The mechanism to be registered.
         requirements : collection
             List of requirement functions.
-
+        __test : bool
+            Whether or not to use the testing namespace.
         """
 
-        cls._validate_function(function)
+        namespace = cls._get_namespace(__test)
+        cls._validate_function(function, namespace)
         cls._validate_requirements(requirements)
 
         name = function.__name__
 
-        cls._mechanism_namespace[name] = {
+        namespace[name] = {
             "requirements": requirements,
             "function": function
         }
 
-        logger.log(
-            cls._REGISTERED_MECHANISM_MESSAGE.format(
-                name, requirements
+        if not __test:
+            logger.log(
+                cls._REGISTERED_MECHANISM_MESSAGE.format(
+                    name, requirements
+                )
             )
-        )
 
     @classmethod
-    def _validate_function(cls, function):
+    def _get_namespace(cls, __test):
+        """Get the namespace depending on if it is a test or not.
+
+        Parameters
+        ----------
+        __test : bool
+            The condition.
+
+        Returns
+        -------
+        dict
+            The namespace to be used.
+        """
+
+        return cls._test_namespace if __test else cls._mechanism_namespace
+
+    @classmethod
+    def _validate_function(cls, function, namespace):
         """Check that a function is valid.
 
         Parameters
@@ -121,6 +149,8 @@ class ReactionDispatcher(object):
         function : callable
             A function or callable object that is serving as a reaction
             mechanism.
+        namespace : dict
+            The namespace being used.
 
         Raises
         ------
@@ -131,7 +161,7 @@ class ReactionDispatcher(object):
 
         mechanism_name = function.__name__
 
-        if mechanism_name in cls._mechanism_namespace:
+        if mechanism_name in namespace:
             message = cls._EXISTING_MECHANISM_ERROR.format(
                 mechanism_name
             )
@@ -153,7 +183,14 @@ class ReactionDispatcher(object):
         InvalidReactionError
             If any of the requirements aren't callable then an error is
             raised.
+            If the requirements is an empty list then an error is
+            raised.
         """
+
+        if not requirements:
+            message = "There must be at least one requirement."
+            logger.error(message)
+            raise InvalidReactionError(message)
 
         for function in requirements:
             if not callable(function):
@@ -169,7 +206,7 @@ class ReactionDispatcher(object):
                 raise InvalidReactionError(message)
 
     @classmethod
-    def _generate_likely_reactions(cls, reactants, conditions):
+    def _generate_likely_reactions(cls, reactants, conditions, namespace):
         """Generate a list of potential reactions.
 
         Parameters
@@ -192,7 +229,7 @@ class ReactionDispatcher(object):
 
         mechanisms = []
 
-        for mech_name, mech_info in six.iteritems(cls._mechanism_namespace):
+        for mech_name, mech_info in six.iteritems(namespace):
             mechanism = mech_info['function']
             requirements = mech_info['requirements']
 
@@ -214,7 +251,7 @@ class ReactionDispatcher(object):
         return mechanisms
 
     @classmethod
-    def _react(cls, reactants, conditions):
+    def _react(cls, reactants, conditions, __test=False):
         """The method that actually performs a reaction.
 
         Parameters
@@ -230,8 +267,10 @@ class ReactionDispatcher(object):
             Returns a list of the products.
         """
 
+        namespace = cls._get_namespace(__test)
+
         potential_reactions = cls._generate_likely_reactions(
-            reactants, conditions
+            reactants, conditions, namespace
         )
 
         for potential_reaction in potential_reactions:
@@ -249,7 +288,7 @@ class ReactionDispatcher(object):
         raise FailedReactionError(message)
 
     @classmethod
-    def _is_registered_reaction(cls, reaction):
+    def _is_registered_reaction(cls, reaction, __test=False):
         """Check if a reaction has been registered.
 
         Parameters
@@ -263,14 +302,16 @@ class ReactionDispatcher(object):
             Whether or not the reaction has been registered.
         """
 
+        namespace = cls._get_namespace(__test)
+
         if callable(reaction):
-            for name, info in six.iteritems(cls._mechanism_namespace):
+            for name, info in six.iteritems(namespace):
                 if reaction is info['function']:
                     return True
             else:
                 return False
         else:
-            return reaction in cls._mechanism_namespace
+            return reaction in namespace
 
 
 # Provide friendlier way to call things

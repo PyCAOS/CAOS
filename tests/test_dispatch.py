@@ -10,33 +10,37 @@ from CAOS.exceptions.dispatch_errors import InvalidReactionError, \
 
 def teardown_module():
     for key in map('reaction{}'.format, [1, 2, 4]):
-        del ReactionDispatcher._mechanism_namespace[key]
+        del ReactionDispatcher._test_namespace[key]
+
+
+def vacuous(*_, **__):
+    return True
 
 
 def test_register_simple_reaction():
-    @register_reaction_mechanism([])
+    @register_reaction_mechanism([vacuous], True)
     def reaction1(reactants, conditions):
         return 42
 
-    assert reaction_is_registered('reaction1')
-    assert reaction_is_registered(reaction1)
+    assert reaction_is_registered('reaction1', True)
+    assert reaction_is_registered(reaction1, True)
 
 
 def test_register_simple_reaction_with_requirements():
     def magic(reactants, conditions):
         return reactants and conditions
 
-    @register_reaction_mechanism([magic])
+    @register_reaction_mechanism([magic], True)
     def reaction2(reactants, conditions):
         return 36
 
-    assert reaction_is_registered('reaction2')
-    assert reaction_is_registered(reaction2)
+    assert reaction_is_registered('reaction2', True)
+    assert reaction_is_registered(reaction2, True)
 
 
 def test_register_simple_reaction_with_invalid_requirements():
     voodoo = 17
-    function = register_reaction_mechanism([voodoo])
+    function = register_reaction_mechanism([voodoo], True)
 
     def reaction3(reactants, conditions):
         return 11
@@ -44,12 +48,12 @@ def test_register_simple_reaction_with_invalid_requirements():
     args = [reaction3]
 
     assert raises(InvalidReactionError, function, args)
-    assert not reaction_is_registered('reaction3')
-    assert not reaction_is_registered(reaction3)
+    assert not reaction_is_registered('reaction3', True)
+    assert not reaction_is_registered(reaction3, True)
 
 
 def test_register_existing_reaction():
-    function = register_reaction_mechanism([])
+    function = register_reaction_mechanism([vacuous], True)
 
     def reaction2(*args):
         pass
@@ -63,9 +67,9 @@ def test_mechanism_not_modified_by_decorator():
     def reaction4(*args):
         return 42
 
-    decorated = register_reaction_mechanism([])(reaction4)
+    decorated = register_reaction_mechanism([vacuous], True)(reaction4)
     assert reaction4 is decorated
     assert reaction4() == decorated()
 
-    assert reaction_is_registered('reaction4')
-    assert reaction_is_registered(reaction4)
+    assert reaction_is_registered('reaction4', True)
+    assert reaction_is_registered(reaction4, True)
