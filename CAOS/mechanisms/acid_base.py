@@ -1,5 +1,8 @@
 """The acid base mechanism implementation."""
 
+from __future__ import print_function, division, unicode_literals, \
+    absolute_import
+
 from copy import deepcopy
 
 
@@ -7,15 +10,26 @@ __requirements__ = ('pka',)
 
 
 def _get_ideal_hydrogen(acid):
-    pass
+    # Todo: Actually compute this here instead of relying on an instance
+    # variable
+    return acid.pka_point
 
 
 def _get_hydrogen_acceptor(base):
-    pass
+    # Todo: Actually compute this here instead of relying on an instance
+    # variable
+    return base.pka_point
 
 
-def _move_hydrogen(base):
-    pass
+def _move_hydrogen(conj_base, donate_id, conj_acid, accept_id):
+    hydrogen = conj_base.node[donate_id]
+    conj_base.remove_node(donate_id)
+    id_ = conj_acid._next_free_atom_id
+    conj_acid._add_node(id_, 'H')
+    conj_acid._add_edge(
+        conj_acid._next_free_bond_id,
+        {'nodes': (id_, accept_id), {'order': 1}}
+    )
 
 
 def acid_base_reaction(reactants, conditions):

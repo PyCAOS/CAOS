@@ -10,6 +10,7 @@ from networkx.algorithms.isomorphism import is_isomorphic
 import six
 
 from .. import logger
+from ..compatibility import range
 
 
 class Molecule(nx.Graph):
@@ -79,7 +80,12 @@ class Molecule(nx.Graph):
         super(Molecule, self).__init__()
         self.atoms = atoms
         self.bonds = bonds
-        self.info = kwargs
+
+        for name, value in six.iteritems(kwargs):
+            if name not in self.__dict__:
+                setattr(self, name, value)
+            else:
+                raise ValueError("Keyword argument {} masks existing name.")
 
     _atoms = None
 
@@ -199,6 +205,32 @@ class Molecule(nx.Graph):
             )
             self.bonds[id_] = bond
 
+    @property
+    def _next_free_atom_id(self):
+        return self._next_id('a')
+
+    @property
+    def _next_free_bond_id(self):
+        return self._next_id('b')
+
+    def _next_id(self, letter):
+        invalid_nums = set()
+        if letter == 'a':
+            for atom_id in self.atoms:
+                invalid_nums.add(int(atom_id[1:]))
+        elif letter == 'b':
+            for bond_id in self.bonds:
+                invalid_nums.add(int(bond_id[1:]))
+        else:
+            raise ValueError(
+                "What kind of id do you want? "
+                "Must be an atom ('a') or a bond ('b')."
+            )
+
+        for i in range(len(invalid_nums)+1):
+            if i not in invalid_nums:
+                return "{}{}".format(letter, i)
+
     def _node_matcher(self, first, second):
         """Check if two nodes are isomorphically equivalent.
 
@@ -226,7 +258,6 @@ class Molecule(nx.Graph):
         return '\n'.join(
             [
                 json.dumps(self.atoms),
-                json.dumps(self.bonds),
-                json.dumps(self.info)
+                json.dumps(self.bonds)
             ]
         )

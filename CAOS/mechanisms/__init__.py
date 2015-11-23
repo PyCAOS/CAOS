@@ -5,8 +5,9 @@ from __future__ import print_function, division, unicode_literals, \
 
 from importlib import import_module
 
+from . import requirements
+
 from ..dispatch import register_reaction_mechanism
-from CAOS import requirements
 
 __mechanisms__ = ('acid_base',)
 
