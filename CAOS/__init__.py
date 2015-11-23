@@ -9,7 +9,7 @@ import argparse
 from .logging import get_logger
 
 
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 __author__ = "Dan Obermiller"
 
 
