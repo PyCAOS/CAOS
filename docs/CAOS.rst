@@ -19,10 +19,10 @@ CAOS.dispatch module
     :members:
     :undoc-members:
 
-CAOS.chem_logging module
+CAOS.logging module
 ------------------------
 
-.. automodule:: CAOS.chem_logging
+.. automodule:: CAOS.logging
     :members:
     :undoc-members:
     :show-inheritance:
@@ -39,5 +39,7 @@ Subpackages
 
 .. toctree::
 
+    CAOS.mechanisms
+    CAOS.requirements
     CAOS.structures
     CAOS.exceptions
