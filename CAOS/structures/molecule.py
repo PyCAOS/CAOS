@@ -227,7 +227,7 @@ class Molecule(nx.Graph):
                 "Must be an atom ('a') or a bond ('b')."
             )
 
-        for i in range(len(invalid_nums)+1):
+        for i in range(len(invalid_nums) + 1):
             if i not in invalid_nums:
                 return "{}{}".format(letter, i)
 

@@ -1,2 +1,2 @@
 six
-networkx
+networkx==1.9.1

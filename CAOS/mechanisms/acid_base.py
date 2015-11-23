@@ -22,13 +22,12 @@ def _get_hydrogen_acceptor(base):
 
 
 def _move_hydrogen(conj_base, donate_id, conj_acid, accept_id):
-    hydrogen = conj_base.node[donate_id]
     conj_base.remove_node(donate_id)
     id_ = conj_acid._next_free_atom_id
     conj_acid._add_node(id_, 'H')
     conj_acid._add_edge(
         conj_acid._next_free_bond_id,
-        {'nodes': (id_, accept_id), {'order': 1}}
+        {'nodes': (id_, accept_id), 'order': 1}
     )
 
 

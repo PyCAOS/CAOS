@@ -17,8 +17,8 @@ matrix:
   fast_finish: true
 
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION != 2.6 ]]; then pip install -r requirements.txt; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install six networkx==1.9.1; fi
+  - pip install -r requirements.txt
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install importlib; fi
   - pip install -r testing-requirements.txt
   - pip install -r docs-requirements.txt
   - if [[ $TRAVIS_PYTHON_VERSION != 3.4 && $TRAVIS_PYTHON_VERSION != 3.5 ]]; then pip install enum34; fi
