@@ -187,18 +187,20 @@ class ReactionDispatcher(object):
         Returns
         =======
         mechanism_function: callable
-            The function that was decorated, unaltered.
+            The function that was decorated, with a `logger` attribute
+            added to it.
 
         Notes
         =====
         Callables that are decorated with this will not have any
-        difference in behavior than if they were not decorated.  In
+        difference in behavior than if they were not decorated (with the
+        exception of having a `logger` attribute added to them). In
         order to get dispatching behavior, the `react` function must
         be used instead.
         """
 
+        mechanism_function.logger = logger
         self.function = mechanism_function
-
         return mechanism_function
 
     @classmethod
