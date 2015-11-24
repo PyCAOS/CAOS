@@ -1,6 +1,5 @@
 """CAOS module."""
 
-
 from __future__ import print_function, division, unicode_literals, \
     absolute_import
 
@@ -36,3 +35,5 @@ elif 'verbose' not in globals():
     verbose = False
 
 logger = get_logger(verbose)
+
+from . import mechanisms   # noqa

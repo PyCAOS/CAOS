@@ -8,8 +8,6 @@
 .. toctree::
    :maxdepth: 2
 
-   README
-
    CAOS
 
 Indices and tables
