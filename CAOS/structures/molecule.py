@@ -82,7 +82,7 @@ class Molecule(nx.Graph):
         self.bonds = bonds
 
         for name, value in six.iteritems(kwargs):
-            if name not in self.__dict__:
+            if not hasattr(self, name):
                 setattr(self, name, value)
             else:
                 raise ValueError("Keyword argument {} masks existing name.")

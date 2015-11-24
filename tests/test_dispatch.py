@@ -73,3 +73,17 @@ def test_mechanism_not_modified_by_decorator():
 
     assert reaction_is_registered('reaction4', True)
     assert reaction_is_registered(reaction4, True)
+
+
+def test_no_requirements_error():
+    registrator = register_reaction_mechanism([], True)
+    assert raises(InvalidReactionError, registrator, ((lambda x, y: None),))
+
+
+def test_not_callable_has_name():
+    class _(object):
+        __name__ = 'dumb'
+
+    registrator = register_reaction_mechanism([_()], True)
+
+    assert raises(InvalidReactionError, registrator, ((lambda x, y: None),))

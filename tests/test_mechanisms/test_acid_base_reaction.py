@@ -19,7 +19,7 @@ def test_simple_acid_base_reaction():
     )
 
     conditions = {
-        'pkas': {'Hydronium': -1.74, 'Hydroxide': 16},
+        'pkas': {'Hydronium': -1.74, 'Hydroxide': 15.7},
         'pka_points': {'Hydronium': 'a1', 'Hydroxide': 'a2'}
     }
 
