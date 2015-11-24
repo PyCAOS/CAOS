@@ -5,12 +5,13 @@ from __future__ import print_function, division, unicode_literals, \
 
 import argparse
 
+import six
+
 from .logging import get_logger
 
 
 __version__ = "0.4.0"
 __author__ = "Dan Obermiller"
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -36,4 +37,9 @@ elif 'verbose' not in globals():
 
 logger = get_logger(verbose)
 
-from . import mechanisms   # noqa
+from .dispatch import register_reaction_mechanism
+from . import mechanisms 
+
+for mechanism_name, values in six.iteritems(mechanisms.__mechanisms__):
+    registrar = register_reaction_mechanism(values['requirements'])
+    registrar(values['function'])

@@ -7,22 +7,24 @@ from importlib import import_module
 
 from . import requirements
 
-from ..dispatch import register_reaction_mechanism
 
-__mechanisms__ = ('acid_base',)
+__mechanism_names__ = ('acid_base',)
+
+__mechanisms__ = {}
 
 
-for mechanism in __mechanisms__:
+for mechanism_name in __mechanism_names__:
     mechanism_module = import_module(
-        ".{0}".format(mechanism), package="CAOS.mechanisms"
+        ".{0}".format(mechanism_name), package="CAOS.mechanisms"
     )
-
     function_requirements = [
         getattr(requirements, requirement_name)
         for requirement_name in mechanism_module.__requirements__
     ]
-    registrator = register_reaction_mechanism(function_requirements)
     mechanism_function = getattr(
-        mechanism_module, "{0}_reaction".format(mechanism)
-    )
-    registrator(mechanism_function)
+        mechanism_module, "{0}_reaction".format(mechanism_name)    )
+    print(type(mechanism_function))
+    __mechanisms__[mechanism_name] = {
+        'function': mechanism_function,
+        'requirements': function_requirements
+    }
