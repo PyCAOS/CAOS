@@ -9,12 +9,38 @@ matrix:
     - python: "3.3"
     - python: "3.4"
     - python: "3.5"
+    - python: "pypy"
   allow_failures:
     - python: "2.6"
     - python: "3.3"
     - python: "3.4"
     - python: "3.5"
+    - python: "pypy"
   fast_finish: true
+
+# Thank you to Binux for helping me with the openbabel issue
+# http://stackoverflow.com/a/28335512/3076272
+# I have further modified that solution to work on the container-based infrastructure
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
+      - swig
+      - python-dev
+      - libxml2-dev
+      - zlib1g-dev
+      - libeigen2-dev
+      - libcairo2-dev
+      - libboost-all-dev
+      - libopenbabel-dev
+      - libopenbabel
+
+# grasshopper helped as well with Python 2.7 and 3.2
+# http://stackoverflow.com/a/28339958/3076272
+# virtualenv:
+#   system_site_packages: true
 
 install:
   - pip install -r requirements.txt
@@ -24,13 +50,9 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION != 3.4 && $TRAVIS_PYTHON_VERSION != 3.5 ]]; then pip install enum34; fi
 
 script:
-  - echo "Checking correctness:"
   - nosetests
-  - echo "Checking PEP 8 compliance:"
   - flake8 .
-  - echo "Checking PEP 257 compliance:"
   - pep257 .
-  - echo "Checking that the docs build:"
   - sphinx-build -E docs docs/_build
 
 after_success:

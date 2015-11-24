@@ -1,2 +1,5 @@
 six
 networkx==1.9.1
+openbabel
+mogli
+cython
