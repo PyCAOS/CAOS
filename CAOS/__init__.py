@@ -1,6 +1,5 @@
 """CAOS module."""
 
-
 from __future__ import print_function, division, unicode_literals, \
     absolute_import
 
@@ -9,7 +8,7 @@ import argparse
 from .logging import get_logger
 
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __author__ = "Dan Obermiller"
 
 
@@ -36,3 +35,5 @@ elif 'verbose' not in globals():
     verbose = False
 
 logger = get_logger(verbose)
+
+from . import mechanisms   # noqa

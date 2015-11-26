@@ -115,3 +115,38 @@ def test_stupid_repr_test():
     )
 
     assert repr(a)
+
+
+def test_next_id_atom():
+    a = Molecule(
+        {'a1': 'H', 'a2': 'O'},
+        {'b1': {'nodes': ('a1', 'a2')}}
+    )
+
+    assert a._next_free_atom_id == 'a0'
+
+
+def test_next_id_bond():
+    a = Molecule(
+        {'a1': 'H', 'a2': 'O'},
+        {'b1': {'nodes': ('a1', 'a2')}}
+    )
+
+    assert a._next_free_bond_id == 'b0'
+
+
+def test_next_id_invalid():
+    a = Molecule(
+        {'a1': 'H', 'a2': 'O'},
+        {'b1': {'nodes': ('a1', 'a2')}}
+    )
+
+    assert raises(ValueError, a._next_id, ('c',))
+
+
+def test_masking_kwarg():
+    assert raises(ValueError, Molecule, (
+        {'a1': 'H', 'a2': 'O'},
+        {'b1': {'nodes': ('a1', 'a2')}}),
+        {'node': 13}
+    )
