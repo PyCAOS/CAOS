@@ -1,6 +1,13 @@
 CAOS.mechanisms package
 =======================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    CAOS.requirements.rst
+
 Module contents
 ---------------
 

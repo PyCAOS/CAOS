@@ -1,10 +1,10 @@
-CAOS.requirements package
+CAOS.mechanisms.requirements package
 =========================
 
 Module contents
 ---------------
 
-.. automodule:: CAOS.requirements
+.. automodule:: CAOS.mechanisms.requirements
     :members:
     :undoc-members:
     :show-inheritance:
