@@ -40,6 +40,5 @@ Subpackages
 .. toctree::
 
     CAOS.mechanisms
-    CAOS.requirements
     CAOS.structures
     CAOS.exceptions
