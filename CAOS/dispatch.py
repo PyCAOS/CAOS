@@ -29,16 +29,16 @@ from . import logger
 class ReactionDispatcher(object):
     """Class that dispatches on reaction types."""
 
-    _REACTION_ATTEMPT_MESSAGE = ("Trying to react reactants {}"
-                                 " in conditions {} as a {} type reaction.")
-    _REACTION_FAILURE_MESSAGE = ("Couldn't react reactants {}"
-                                 " in conditions {}.")
-    _REGISTERED_MECHANISM_MESSAGE = "Added mechanism {} with requirements {}."
-    _REQUIREMENT_NOT_MET_MESSAGE = ("Requirement {} for mechanism {} not met"
-                                    " by reactants {} in conditions {}")
-    _REQUIREMENT_PASSED_MESSAGE = "Passed requirement {} for mechanism {}"
-    _ADDED_POSSIBLE_MECHANISM = "Added potential mechanism {}"
-    _EXISTING_MECHANISM_ERROR = "A mechanism named {} already exists."
+    _REACTION_ATTEMPT_MESSAGE = ("Trying to react reactants {0}"
+                                 " in conditions {1} as a {2} type reaction.")
+    _REACTION_FAILURE_MESSAGE = ("Couldn't react reactants {0}"
+                                 " in conditions {1}.")
+    _REGISTERED_MECHANISM_MESSAGE = "Added mechanism {0} with requirements {1}."
+    _REQUIREMENT_NOT_MET_MESSAGE = ("Requirement {0} for mechanism {1} not met"
+                                    " by reactants {2} in conditions {3}")
+    _REQUIREMENT_PASSED_MESSAGE = "Passed requirement {0} for mechanism {1}"
+    _ADDED_POSSIBLE_MECHANISM = "Added potential mechanism {0}"
+    _EXISTING_MECHANISM_ERROR = "A mechanism named {0} already exists."
 
     _mechanism_namespace = {}
     _test_namespace = {}
@@ -195,11 +195,11 @@ class ReactionDispatcher(object):
         for function in requirements:
             if not callable(function):
                 if hasattr(function, '__name__'):
-                    message = "Requirement named {} is not a function.".format(
+                    message = "Requirement named {0} is not a function.".format(
                         function.__name__
                     )
                 else:
-                    message = "Requirement {} is not a function.".format(
+                    message = "Requirement {0} is not a function.".format(
                         function
                     )
                 logger.error(message)

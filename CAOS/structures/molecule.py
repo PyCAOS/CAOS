@@ -16,8 +16,8 @@ from ..compatibility import range
 class Molecule(nx.Graph):
     """Representation of a molecule as a graph."""
 
-    _ATOM_EXISTS = "ATOM {} exists in the molecule as ID {}"
-    _BOND_EXISTS = "BOND {} exists in the molecule as ID {}"
+    _ATOM_EXISTS = "ATOM {0} exists in the molecule as ID {1}"
+    _BOND_EXISTS = "BOND {0} exists in the molecule as ID {1}"
 
     @classmethod
     def from_default(cls, other):
@@ -85,7 +85,7 @@ class Molecule(nx.Graph):
             if not hasattr(self, name):
                 setattr(self, name, value)
             else:
-                raise ValueError("Keyword argument {} masks existing name.")
+                raise ValueError("Keyword argument {0} masks existing name.")
 
     _atoms = None
 
@@ -229,7 +229,7 @@ class Molecule(nx.Graph):
 
         for i in range(len(invalid_nums) + 1):
             if i not in invalid_nums:
-                return "{}{}".format(letter, i)
+                return "{0}{1}".format(letter, i)
 
     def _node_matcher(self, first, second):
         """Check if two nodes are isomorphically equivalent.

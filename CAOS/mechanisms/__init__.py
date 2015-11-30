@@ -14,7 +14,7 @@ __mechanisms__ = ('acid_base',)
 
 for mechanism in __mechanisms__:
     mechanism_module = import_module(
-        ".{}".format(mechanism), package="CAOS.mechanisms"
+        ".{0}".format(mechanism), package="CAOS.mechanisms"
     )
 
     function_requirements = [
@@ -23,6 +23,6 @@ for mechanism in __mechanisms__:
     ]
     registrator = register_reaction_mechanism(function_requirements)
     mechanism_function = getattr(
-        mechanism_module, "{}_reaction".format(mechanism)
+        mechanism_module, "{0}_reaction".format(mechanism)
     )
     registrator(mechanism_function)

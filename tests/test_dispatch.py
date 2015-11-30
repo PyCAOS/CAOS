@@ -9,7 +9,7 @@ from CAOS.exceptions.dispatch_errors import InvalidReactionError, \
 
 
 def teardown_module():
-    for key in map('reaction{}'.format, [1, 2, 4]):
+    for key in map('reaction{0}'.format, [1, 2, 4]):
         del ReactionDispatcher._test_namespace[key]
 
 
