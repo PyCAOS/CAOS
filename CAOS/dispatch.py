@@ -17,7 +17,8 @@ reaction_is_registered: function
 
 from __future__ import print_function, division, unicode_literals, \
     absolute_import
-
+from future.builtins import *
+from future.builtins.disabled import *
 import six
 
 from .exceptions.dispatch_errors import ExistingReactionError, \

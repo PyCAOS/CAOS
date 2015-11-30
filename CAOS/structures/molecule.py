@@ -2,12 +2,14 @@
 
 from __future__ import print_function, division, unicode_literals, \
     absolute_import
+from future.builtins import *
+from future.builtins.disabled import *
+import six
 
 import json
 
 import networkx as nx
 from networkx.algorithms.isomorphism import is_isomorphic
-import six
 
 from .. import logger
 from ..compatibility import range
