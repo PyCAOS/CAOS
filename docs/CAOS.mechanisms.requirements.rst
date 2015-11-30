@@ -1,5 +1,5 @@
 CAOS.mechanisms.requirements package
-=========================
+====================================
 
 Module contents
 ---------------

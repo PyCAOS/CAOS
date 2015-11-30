@@ -3,9 +3,10 @@ CAOS - Computer Assisted Organic Synthesis (in Python!)
 
 |Build status| |Coverage Status| |Documentation Status|
 
-CAOS is a useful tool for many organic chemists, but is often a hard one
-to use in practice. This library will seek to provide an easy method of
-predicting reactions.
+Traditional Computer Assisted Organic Synthesis is a useful tool for many
+organic chemists, but can often be more difficult to use in practice. The
+CAOS library seeks to provide an easy way of predicting organic chemsitry
+reactions.
 
 Documentation
 ~~~~~~~~~~~~~
@@ -15,7 +16,7 @@ Is available at `readthedocs.org <http://caos.readthedocs.org/en/latest/>`__.
 Examples
 ~~~~~~~~
 
-Simple reactions can be performed in this way
+Simple reactions can be performed like so:
 
 .. code:: python
 
@@ -28,13 +29,13 @@ Simple reactions can be performed in this way
          'b2': {'nodes': ('a2', 'a4'), 'order': 1},
          'b3': {'nodes': ('a3', 'a4'), 'order': 1}
         },
-        **{'id': 'Hydronium'}
+        id='Hydronium'
     )
 
     base = Molecule(
         {'a1': 'H', 'a2': 'O'},
         {'b1': {'nodes': ('a1', 'a2'), 'order': 1}},
-        **{'id': 'Hydroxide'}
+        id='Hydroxide'
     )
 
     conditions = {

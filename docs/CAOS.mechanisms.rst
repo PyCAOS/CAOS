@@ -6,7 +6,7 @@ Subpackages
 
 .. toctree::
 
-    CAOS.requirements.rst
+    CAOS.mechanisms.requirements.rst
 
 Module contents
 ---------------
@@ -20,7 +20,7 @@ Submodules
 ----------
 
 CAOS.mechanisms.acid_base module
----------------=----------------
+--------------------------------
 
 .. automodule:: CAOS.mechanisms.acid_base
     :members:
