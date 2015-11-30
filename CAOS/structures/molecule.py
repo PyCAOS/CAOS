@@ -2,8 +2,8 @@
 
 from __future__ import print_function, division, unicode_literals, \
     absolute_import
-from future.builtins import *
-from future.builtins.disabled import *
+from future.builtins import *  # noqa
+from future.builtins.disabled import *  # noqa
 import six
 
 import json
@@ -12,7 +12,6 @@ import networkx as nx
 from networkx.algorithms.isomorphism import is_isomorphic
 
 from .. import logger
-from ..compatibility import range
 
 
 class Molecule(nx.Graph):

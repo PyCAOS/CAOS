@@ -2,8 +2,8 @@
 
 from __future__ import print_function, division, unicode_literals, \
     absolute_import
-from future.builtins import *
-from future.builtins.disabled import *
+from future.builtins import *  # noqa
+from future.builtins.disabled import *  # noqa
 
 from importlib import import_module
 
@@ -24,7 +24,8 @@ for mechanism_name in __mechanism_names__:
         for requirement_name in mechanism_module.__requirements__
     ]
     mechanism_function = getattr(
-        mechanism_module, "{0}_reaction".format(mechanism_name)    )
+        mechanism_module, "{0}_reaction".format(mechanism_name)
+    )
     print(type(mechanism_function))
     __mechanisms__[mechanism_name] = {
         'function': mechanism_function,

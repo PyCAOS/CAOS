@@ -2,8 +2,8 @@
 
 from __future__ import print_function, division, unicode_literals, \
     absolute_import
-from future.builtins import *
-from future.builtins.disabled import *
+from future.builtins import *  # noqa
+from future.builtins.disabled import *  # noqa
 
 
 def raises(exception_types, function, args=None, kwargs=None):
@@ -25,21 +25,21 @@ def raises(exception_types, function, args=None, kwargs=None):
     ========
     It should return `False` when given a valid value
 
-    >>> raises(ValueError, int, ["3"])
+    >>> raises(TypeError, abs, [3])
     False
 
     It should return `True` when given an invalid value that results in
     the expected error
 
-    >>> raises(ValueError, int, ["hello"])
+    >>> raises(TypeError, abs, [[]])
     True
 
     It should raise an error if it gets an unexpected error
 
-    >>> raises(UnboundLocalError, int, ["hello"])
+    >>> raises(UnboundLocalError, abs, [[]])
     Traceback (most recent call last):
         ...
-    ValueError: invalid literal for int() with base 10: 'hello'
+    TypeError: bad operand type for abs(): 'list'
     """
 
     args = args if args is not None else []
