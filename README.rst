@@ -1,7 +1,7 @@
 CAOS - Computer Assisted Organic Synthesis (in Python!)
 =======================================================
 
-|Build status| |Coverage Status| |Documentation Status|
+|Build Status| |Coverage Status| |Documentation Status| |Codacy Status|
 
 Traditional Computer Assisted Organic Synthesis is a useful tool for many
 organic chemists, but can often be more difficult to use in practice. The
@@ -110,9 +110,11 @@ CAOS is licensed using the `MIT License <https://opensource.org/licenses/MIT>`_.
 
 .. include:: ../LICENSE
 
-.. |Build status| image:: https://travis-ci.org/PyCAOS/CAOS.svg?branch=master
+.. |Build Status| image:: https://travis-ci.org/PyCAOS/CAOS.svg?branch=master
    :target: https://travis-ci.org/PyCAOS/CAOS
 .. |Coverage Status| image:: https://codecov.io/github/PyCAOS/CAOS/coverage.svg?branch=master
     :target: https://codecov.io/github/PyCAOS/CAOS?branch=master
 .. |Documentation Status| image:: https://readthedocs.org/projects/caos/badge/?version=latest
    :target: http://caos.readthedocs.org/en/latest/?badge=latest
+.. |Codacy Status| image:: https://api.codacy.com/project/badge/grade/8ed5a7c79ff14231a23747d0171b7120
+    :target: https://www.codacy.com/app/dannnno16/CAOS
