@@ -30,4 +30,4 @@ script:
   - sphinx-build -E docs docs/_build
 
 after_success:
-  - coveralls
+  - codecov

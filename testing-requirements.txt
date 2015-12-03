@@ -1,4 +1,4 @@
-coveralls
+codecov
 coverage
 nose
 flake8

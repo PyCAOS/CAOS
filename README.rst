@@ -112,7 +112,7 @@ CAOS is licensed using the `MIT License <https://opensource.org/licenses/MIT>`_.
 
 .. |Build status| image:: https://travis-ci.org/PyCAOS/CAOS.svg?branch=master
    :target: https://travis-ci.org/PyCAOS/CAOS
-.. |Coverage Status| image:: https://coveralls.io/repos/PyCAOS/CAOS/badge.svg?branch=master&service=github
-   :target: https://coveralls.io/github/PyCAOS/CAOS?branch=master
+.. |Coverage Status| image:: https://codecov.io/github/PyCAOS/CAOS/coverage.svg?branch=master
+    :target: https://codecov.io/github/PyCAOS/CAOS?branch=master
 .. |Documentation Status| image:: https://readthedocs.org/projects/caos/badge/?version=latest
    :target: http://caos.readthedocs.org/en/latest/?badge=latest
